@@ -19,6 +19,17 @@ else()
 	set(OPENSCAP_VERSION "${OPENSCAP_VERSION_MAJOR}.${OPENSCAP_VERSION_MINOR}.${OPENSCAP_VERSION_PATCH}")
 endif()
 
+# Testing to see how to work around the OSX 10.14+ -isysroot issue
+if (DEFINED CMAKE_OSX_SYSROOT)
+    # OSX with CMAKE_OSX_SYSROOT set requires additional flags
+    set (COMPILER
+      "CC=${CMAKE_C_COMPILER} ${CMAKE_C_SYSROOT_FLAG} ${CMAKE_OSX_SYSROOT}"
+      "CXX=${CMAKE_CXX_COMPILER} ${CMAKE_CXX_SYSROOT_FLAG} ${CMAKE_OSX_SYSROOT}"
+      )
+else()
+    set (COMPILER CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER})
+endif()
+
 # libtool versioning
 # See http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91 for details
 
@@ -107,7 +118,7 @@ find_package(Ldap)
 find_package(OpenDbx)
 
 find_package(PCRE REQUIRED)
-include_directories(${PCRE_INCLUDE_DIRS})
+#include_directories(${PCRE_INCLUDE_DIRS})
 
 find_package(PerlLibs)
 find_package(Popt)
@@ -368,7 +379,7 @@ message(STATUS "  Independent variable probe: ${OPENSCAP_PROBE_INDEPENDENT_VARIA
 
 message(STATUS "")
 message(STATUS "Independent probes incompatible with WIN32 (WIN32 status: ${IS_WIN32})")
-message(STATUS "  Independent environmentvariable probe: ${OPENSCAP_PROBE_INDEPENDENT_ENVIRONMENTVARIABLE}") 
+message(STATUS "  Independent environmentvariable probe: ${OPENSCAP_PROBE_INDEPENDENT_ENVIRONMENTVARIABLE}")
 message(STATUS "  Independent environmentvariable58 probe: ${OPENSCAP_PROBE_INDEPENDENT_ENVIRONMENTVARIABLE58}")
 message(STATUS "  Independent filehash probe: ${OPENSCAP_PROBE_INDEPENDENT_FILEHASH}")
 message(STATUS "  Independent filehash58 probe: ${OPENSCAP_PROBE_INDEPENDENT_FILEHASH58}")
